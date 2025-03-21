@@ -1,3 +1,6 @@
+Project Description
+Personal Journal is a simple web-based journaling application built using HTML, CSS, and JavaScript. It allows users to keep track of their daily thoughts, moods, and the music they are listening to, as well as provide a space for self-reflection. Users can save and view their journal entries, edit or delete them, and have the data persist through local storage. This project is designed to be a lightweight, user-friendly tool for personal journaling.
+
 Features
 Save Journal Entries: Users can save entries including the date, mood, music of the day, and personal thoughts.
 View Saved Entries: Entries are displayed in a sidebar, with options to view, delete, or edit each one.
