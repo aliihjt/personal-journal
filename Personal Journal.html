@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Journal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            background: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+        .side-panel {
+            width: 250px;
+            background: #1e1e1e;
+            padding: 15px;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .entry-section {
+            background: #1e1e1e;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
+        }
+        textarea, input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background: #222;
+            color: #fff;
+        }
+        button {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #d32f2f;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            width: 300px;
+        }
+        .popup button {
+            margin-top: 10px;
+            background: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="side-panel">
+        <h2>Saved Entries</h2>
+        <ul id="savedEntries"></ul>
+    </div>
+    <div class="container">
+        <h1>Personal Journal</h1>
+        <div class="entry-section">
+            <h2>Journal Entry</h2>
+            <label>Date: <input type="date" id="date"></label><br>
+            <label>Mood: <select id="mood">
+                <option>😊 Happy</option>
+                <option>😐 Neutral</option>
+                <option>😢 Sad</option>
+                <option>😡 Angry</option>
+                <option>😴 Tired</option>
+            </select></label><br>
+            <label>Music of the Day: <input type="text" id="music" placeholder="Song Name - Artist"></label>
+        </div>
+        <div class="entry-section">
+            <h2>Thoughts & Reflections</h2>
+            <textarea id="thoughts" placeholder="Write about your day..."></textarea>
+        </div>
+        <button onclick="saveEntry()">Save Entry</button>
+    </div>
+    <div class="popup" id="popup">
+        <h2>Journal Entry</h2>
+        <p id="popupContent"></p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+    <script>
+        function saveEntry() {
+            const journalEntry = {
+                date: document.getElementById('date').value,
+                mood: document.getElementById('mood').value,
+                music: document.getElementById('music').value,
+                thoughts: document.getElementById('thoughts').value
+            };
+            let entries = JSON.parse(localStorage.getItem('journalEntries')) || [];
+            entries.push(journalEntry);
+            localStorage.setItem('journalEntries', JSON.stringify(entries));
+            alert('Journal entry saved!');
+            loadEntries();
+        }
+
+        function loadEntries() {
+            let entries = JSON.parse(localStorage.getItem('journalEntries')) || [];
+            let savedEntries = document.getElementById('savedEntries');
+            savedEntries.innerHTML = '';
+            entries.forEach((entry, index) => {
+                let li = document.createElement('li');
+                li.innerHTML = `<strong>${entry.date}</strong> - ${entry.mood} <button onclick="viewEntry(${index})">👁️</button> <button onclick="deleteEntry(${index})">🗑️</button>`;
+                savedEntries.appendChild(li);
+            });
+        }
+
+        function deleteEntry(index) {
+            let entries = JSON.parse(localStorage.getItem('journalEntries')) || [];
+            entries.splice(index, 1);
+            localStorage.setItem('journalEntries', JSON.stringify(entries));
+            loadEntries();
+        }
+
+        function viewEntry(index) {
+            let entries = JSON.parse(localStorage.getItem('journalEntries')) || [];
+            let entry = entries[index];
+            document.getElementById('popupContent').innerHTML = `<strong>Date:</strong> ${entry.date}<br><strong>Mood:</strong> ${entry.mood}<br><strong>Music:</strong> ${entry.music}<br><strong>Thoughts:</strong> ${entry.thoughts}`;
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        window.onload = loadEntries;
+    </script>
+</body>
+</html>
